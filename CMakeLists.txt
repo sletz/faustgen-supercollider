@@ -67,7 +67,12 @@ endif()
 # Begin target FaustGen
 
 include(cmake_modules/FaustLib.cmake)
+
+# For Macports
 include_directories(/opt/local/include)
+
+# For Brew
+include_directories(/opt/homebrew/include)
 
 # include_directories(/usr/include/faust)
 # target_include_directories("FaustGen_name}_scsynth" PUBLIC /usr/include/faust)

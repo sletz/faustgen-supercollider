@@ -6,6 +6,7 @@
 #include "SC_PlugIn.hpp"
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 extern InterfaceTable *ft;
 

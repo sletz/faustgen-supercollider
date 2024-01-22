@@ -39,6 +39,8 @@ bool parse(FaustCommandData *cmdData) {
     // Post debug info
     if (debug_messages) {
       Print("Created faust factory \n");
+        
+      std::cout << "FaustVersion: " << getCLibFaustVersion() << std::endl;
 
       const auto dspcode = cmdData->factory->getDSPCode();
 
@@ -55,7 +57,7 @@ bool parse(FaustCommandData *cmdData) {
       for (auto libb : cmdData->factory->getLibraryList())
         std::cout << "\t" << libb << std::endl;
 
-      std::cout << cmdData->factory->getTarget() << std::endl;
+      //std::cout << cmdData->factory->getTarget() << std::endl;
     }
 
     return true;

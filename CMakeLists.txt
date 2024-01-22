@@ -110,9 +110,9 @@ target_link_libraries("FaustGen_scsynth" staticlib)
 target_link_libraries("FaustGen_supernova" staticlib)
 
 ## Link the Pure Data external with llvm
-find_package(LLVM REQUIRED CONFIG)
-message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
-message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
+#find_package(LLVM REQUIRED CONFIG)
+#message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+#message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 
 # End target FaustGen
 ####################################################################################################

@@ -20,5 +20,9 @@ f.eval( "import(\"stdfaust.lib\"); process = os.triangle(os.triangle(400) * 200)
 f.eval( "import(\"stdfaust.lib\"); process = no.noise;");
 )
 
+(
+f.eval( "import(\"stdfaust.lib\"); process = 0,_~+(1):soundfile(\"sound[url:{'levot-all.wav'}]\",2):!,!,_,_;")
+)
+
 f << "import(\"stdfaust.lib\"); process = os.triangle(180);";
 

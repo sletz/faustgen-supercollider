@@ -67,6 +67,7 @@ endif()
 # Begin target FaustGen
 
 include(cmake_modules/FaustLib.cmake)
+include_directories(/opt/local/include)
 
 # include_directories(/usr/include/faust)
 # target_include_directories("FaustGen_name}_scsynth" PUBLIC /usr/include/faust)
@@ -108,6 +109,13 @@ add_dependencies("FaustGen_supernova" staticlib)
 
 target_link_libraries("FaustGen_scsynth" staticlib)
 target_link_libraries("FaustGen_supernova" staticlib)
+
+find_library( CORESERVICES_LIBRARY CoreServices )
+find_library( COREFOUNDATION_LIBRARY CoreFoundation )
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-undefined,dynamic_lookup")
+
+target_link_libraries("FaustGen_scsynth" ${CORESERVICES_LIBRARY} ${COREFOUNDATION_LIBRARY})
 
 ## Link the Pure Data external with llvm
 #find_package(LLVM REQUIRED CONFIG)

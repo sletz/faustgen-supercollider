@@ -1,11 +1,41 @@
 #include "faustPluginCommand.hpp"
 #include "faustPluginParsing.hpp"
+#include "faust/gui/SoundUI.h"
 
 namespace FaustGen {
+    
+std::string defaultSoundfilesDirectory()
+{
+    char* soundfiles_dir = getenv("FAUST_SOUNDFILES");
+    return std::string((soundfiles_dir) ? soundfiles_dir : "");
+}
+
+#ifdef __APPLE__
+std::string defaultUserAppSupportDirectory()
+{
+    return std::string(getenv("HOME")) + "/Library/Application Support/SuperCollider/Extensions";
+}
+std::string defaultSoundfilesDirectory1()
+{
+    return std::string(getenv("HOME")) + "/Library/Application Support/SuperCollider/Extensions/FaustSounds";
+}
+#else
+std::string defaultUserAppSupportDirectory()
+{
+    return getenv("HOME");
+}
+std::string defaultSoundfilesDirectory1()
+{
+    return std::string(getenv("HOME")) + "/FaustSounds";
+}
+#endif
+
 
 extern const bool debug_messages;
 
 FaustData faustData;
+    
+static SoundUI* gSoundInterface = nullptr;
 
 /**********************************************
  *
@@ -23,6 +53,14 @@ bool cmdStage2(World *world, void *inUserData) {
   // creating the DSP instance for interfacing
   if (faustCmdData->parsedOK) {
     faustCmdData->commandDsp = faustCmdData->factory->createDSPInstance();
+      
+    if (!gSoundInterface) {
+        std::vector<std::string> soundfile_dirs = { defaultUserAppSupportDirectory(), defaultSoundfilesDirectory1(), SoundUI::getBinaryPath() };
+        gSoundInterface = new SoundUI(soundfile_dirs);
+    }
+      
+    faustCmdData->commandDsp->buildUserInterface(gSoundInterface);
+      
     faustCmdData->commandDsp->init(static_cast<int>(faustCmdData->sampleRate));
 
     return true;

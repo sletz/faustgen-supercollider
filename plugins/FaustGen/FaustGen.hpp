@@ -4,7 +4,6 @@
 #pragma once
 
 #include "SC_PlugIn.hpp"
-#include "faust/dsp/libfaust.h"
 #include "faust/dsp/llvm-dsp.h"
 
 #define MAX_FAUST_INPUTS 64

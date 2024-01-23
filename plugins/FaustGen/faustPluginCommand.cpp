@@ -58,7 +58,6 @@ bool cmdStage2(World *world, void *inUserData) {
         std::vector<std::string> soundfile_dirs = { defaultUserAppSupportDirectory(), defaultSoundfilesDirectory1(), SoundUI::getBinaryPath() };
         gSoundInterface = new SoundUI(soundfile_dirs);
     }
-      
     faustCmdData->commandDsp->buildUserInterface(gSoundInterface);
       
     faustCmdData->commandDsp->init(static_cast<int>(faustCmdData->sampleRate));
@@ -89,7 +88,7 @@ bool cmdStage4(World *world, void *inUserData) { return true; }
 
 void cmdCleanup(World *world, void *inUserData) {
   FaustCommandData *faustCmdData = (FaustCommandData *)inUserData;
-
+    
   RTFree(world, faustCmdData->code); // free the string
   // @TODO will this delete factory and dsp as well, properly?
   RTFree(world, faustCmdData); // free command data
@@ -101,8 +100,8 @@ void receiveNewFaustCode(World *inWorld, void *inUserData,
 
   // allocate command data, free it in cmdCleanup.
   FaustCommandData *faustCmdData =
-      (FaustCommandData *)RTAlloc(inWorld, sizeof(FaustCommandData));
-
+      (FaustCommandData *)new (RTAlloc(inWorld, sizeof(FaustCommandData))) FaustCommandData();
+    
   faustCmdData->sampleRate = inWorld->mSampleRate;
 
   // ID arguments

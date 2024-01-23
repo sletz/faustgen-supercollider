@@ -32,6 +32,8 @@ struct FaustCommandData {
   double sampleRate;
 
   bool parsedOK;
+    
+  FaustCommandData():factory(nullptr),commandDsp(nullptr) {}
 };
 
 

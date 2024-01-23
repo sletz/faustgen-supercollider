@@ -29,7 +29,7 @@ public:
 private:
   void next(int nSamples);
   void clear(int nSamples);
-  dsp *m_dsp;
+  dsp *m_dsp{nullptr};
   bool m_hasDSP{false};
 
   std::string m_errorString;

@@ -32,7 +32,6 @@ bool parse(FaustCommandData *cmdData) {
   // If a factory cannot be created it is usually because of (syntax) errors in
   // the faust code
   if (!cmdData->factory) {
-
     std::cout << errorString << std::endl;
     return false;
   } else {

@@ -29,13 +29,47 @@ std::string defaultSoundfilesDirectory1()
     return std::string(getenv("HOME")) + "/FaustSounds";
 }
 #endif
+    
+    
+// Use a custom memory manager to correctly handle DSP instances memory with RTAlloc/RTFree.
+struct rtalloc_memory_manager final : public dsp_memory_manager {
+    
+    World* mWorld;
+    
+    rtalloc_memory_manager(World* world):mWorld(world)
+    {}
+    
+    void begin(size_t count)
+    {}
+    
+    void info(size_t size, size_t reads, size_t writes)
+    {}
+    
+    void end()
+    {}
+    
+    void* allocate(size_t size)
+    {
+        //std::cout << "rtalloc_memory_manager::allocate " << size << std::endl;
+        return RTAlloc(mWorld, size);
+    }
+    
+    void destroy(void* ptr)
+    {
+        //std::cout << "rtalloc_memory_manager::destroy ptr = " << ptr << std::endl;
+        RTFree(mWorld, ptr);
+    }
+};
 
 
+    
 extern const bool debug_messages;
-
-FaustData faustData;
+    
+static FaustData faustData;
     
 static SoundUI* gSoundInterface = nullptr;
+    
+static rtalloc_memory_manager* gMemoryManager = nullptr;
 
 /**********************************************
  *
@@ -49,7 +83,14 @@ bool cmdStage2(World *world, void *inUserData) {
   FaustCommandData *faustCmdData = (FaustCommandData *)inUserData;
 
   faustCmdData->parsedOK = parse(faustCmdData);
+    
+  // Setup RT memory manager (once)
+  if (!gMemoryManager) {
+      gMemoryManager = new rtalloc_memory_manager(world);
+  }
 
+  faustCmdData->factory->setMemoryManager(gMemoryManager);
+    
   // creating the DSP instance for interfacing
   if (faustCmdData->parsedOK) {
     faustCmdData->commandDsp = faustCmdData->factory->createDSPInstance();
@@ -88,6 +129,9 @@ bool cmdStage4(World *world, void *inUserData) { return true; }
 
 void cmdCleanup(World *world, void *inUserData) {
   FaustCommandData *faustCmdData = (FaustCommandData *)inUserData;
+     
+  // Delete DSP factory ?
+  // deleteDSPFactory(faustCmdData->factory);
     
   RTFree(world, faustCmdData->code); // free the string
   // @TODO will this delete factory and dsp as well, properly?

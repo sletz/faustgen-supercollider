@@ -72,9 +72,10 @@ FaustGen::FaustGen() {
 
 FaustGen::~FaustGen() {
   // @TODO realtime safe
-  if (m_hasDSP)
+  if (m_hasDSP) {
     /* RTFree(mWorld, m_dsp); */
     delete m_dsp;
+  }
   m_hasDSP = false;
 
   // @TODO Realtime safe!

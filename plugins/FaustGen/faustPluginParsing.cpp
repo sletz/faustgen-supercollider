@@ -1,7 +1,7 @@
 #include "faustPluginParsing.hpp"
 
 namespace FaustGen {
-
+    
 /**********************************************
  *
  * PARSER
@@ -22,11 +22,14 @@ bool parse(FaustCommandData *cmdData) {
 
   // Create factory
   auto optimize = -1;
-  auto argc = 0;
-  const char **argv = NULL;
   auto name = "faustgen";
   std::string errorString;
-  cmdData->factory = createDSPFactoryFromString(name, cmdData->code, argc, argv,
+    
+  // Tables should be internalized so that the rtalloc_memory_manager correctly manage all needed memory with RTAlloc/RTFree.
+  std::vector<const char*> argv = {"-it"};
+  argv.push_back(nullptr);  // Null termination
+    
+  cmdData->factory = createDSPFactoryFromString(name, cmdData->code, argv.size() - 1, argv.data(),
                                                 "", errorString, optimize);
 
   // If a factory cannot be created it is usually because of (syntax) errors in
